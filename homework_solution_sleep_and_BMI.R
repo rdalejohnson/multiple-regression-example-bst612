@@ -1,4 +1,8 @@
 ############################### STEP ONE: CONDUCT UNIVARIATE ANALYSES #####################################
+############################### STEP ONE: CONDUCT UNIVARIATE ANALYSES #####################################
+############################### STEP ONE: CONDUCT UNIVARIATE ANALYSES #####################################
+############################### STEP ONE: CONDUCT UNIVARIATE ANALYSES #####################################
+############################### STEP ONE: CONDUCT UNIVARIATE ANALYSES #####################################
 
 library(summarytools)
 
@@ -45,5 +49,16 @@ bmi.shapiro
 
 summary(lab)
 
+#################################### END OF STEP ONE: UNIVARIATE ANALYSIS *********************************************
+#################################### END OF STEP ONE: UNIVARIATE ANALYSIS *********************************************
+#################################### END OF STEP ONE: UNIVARIATE ANALYSIS *********************************************
+#################################### END OF STEP ONE: UNIVARIATE ANALYSIS *********************************************
+#################################### END OF STEP ONE: UNIVARIATE ANALYSIS *********************************************
 
 
+
+##### REMOVE ROWS WITH NA and INVALID DATA, reducing number of rows to 3444
+
+lab <- lab[-which(is.na(lab$sleep_quality) | is.na(lab$sleep_duration) |  lab$sleep_duration >= 30 ), ]
+
+summary(lab)
