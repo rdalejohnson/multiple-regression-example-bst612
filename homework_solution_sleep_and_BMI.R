@@ -77,15 +77,47 @@ lab$sleep_duration[lab$sleep_duration == 30] <- NA
 ###PRIMARY PREDICTOR BY ALL OTHER VARIABLES
 ###PRIMARY PREDICTOR: SLEEP DURATION
 
-###PRIMARY PREDICTOR: SLEEP DURATION BY AGE
+###SLEEP DURATION BY AGE
 ###CONTINUOUS BY CONTINUOUS
 
 library(rms)
+library(car)
 
      
-Hmisc::rcorr(x=lab$age,y=lab$sleep_duration)
+scatterplot(sleep_duration ~ age, data = lab)
+plot(x=lab$age,y=lab$sleep_duration)
+Hmisc::rcorr(x=lab$age,y=lab$sleep_duration, type=c("spearman"))
+Hmisc::rcorr(x=lab$age,y=lab$sleep_duration, type=c("pearson"))
+
+
+
+###SLEEP DURATION BY RACE
+###CONTINUOUS BY CATEGORICAL
+
+#Levene's test for equality of variance
+var.test(lab$sleep_duration ~ lab$race)
+
+#unequal variances t-test
+t.test(lab$sleep_duration ~ lab$race, var.equal=F)
+
+#equal variances t-test
+t.test(lab$sleep_duration ~ lab$race, var.equal=T)
+
+
+
+###SLEEP DURATION BY SLEEP QUALITY
+###CONTINUOUS BY CATEGORICAL
+
+#Levene's test for equality of variance
+var.test(lab$sleep_duration ~ lab$sleep_quality)
+
+#unequal variances t-test
+t.test(lab$sleep_duration ~ lab$race, var.equal=F)
+
+#equal variances t-test
+t.test(lab$sleep_duration ~ lab$race, var.equal=T)
+
+
+
+
      
-
-
-
-
