@@ -57,8 +57,34 @@ summary(lab)
 
 
 
-##### REMOVE ROWS WITH NA and INVALID DATA, reducing number of rows to 3444
+          ##### REMOVE ROWS WITH NA and INVALID DATA, reducing number of rows to 3444
+          ##### REMOVE ROWS WITH NA and INVALID DATA, reducing number of rows to 3444
+          ##### REMOVE ROWS WITH NA and INVALID DATA, reducing number of rows to 3444
 
 lab <- lab[-which(is.na(lab$sleep_quality) | is.na(lab$sleep_duration) |  lab$sleep_duration >= 30 ), ]
 
 summary(lab)
+
+
+#################################### STEP TWO: BIVARIATE ANALYSES *********************************************
+#################################### STEP TWO: BIVARIATE ANALYSES *********************************************
+#################################### STEP TWO: BIVARIATE ANALYSES *********************************************
+#################################### STEP TWO: BIVARIATE ANALYSES *********************************************
+#################################### STEP TWO: BIVARIATE ANALYSES *********************************************
+
+
+###PRIMARY PREDICTOR BY ALL OTHER VARIABLES
+###PRIMARY PREDICTOR: SLEEP DURATION
+
+###PRIMARY PREDICTOR: SLEEP DURATION BY AGE
+###CONTINUOUS BY CONTINUOUS
+
+#library(rms)
+#with(lab, 
+     
+rcorr(x=lab$age,y=lab$sleep_duration)
+     
+
+
+
+
