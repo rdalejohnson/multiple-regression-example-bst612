@@ -91,17 +91,21 @@ Hmisc::rcorr(x=lab$age,y=lab$sleep_duration, type=c("pearson"))
 
 
 
-###SLEEP DURATION BY RACE
-###CONTINUOUS BY CATEGORICAL
 
-#Levene's test for equality of variance
-var.test(lab$sleep_duration ~ lab$race)
 
-#unequal variances t-test
-t.test(lab$sleep_duration ~ lab$race, var.equal=F)
 
-#equal variances t-test
-t.test(lab$sleep_duration ~ lab$race, var.equal=T)
+
+
+###SLEEP DURATION BY BMI
+###CONTINUOUS BY CONTINUOUS
+
+
+scatterplot(sleep_duration ~ bmi, data = lab)
+plot(x=lab$bmi,y=lab$sleep_duration)
+Hmisc::rcorr(x=lab$bmi,y=lab$sleep_duration, type=c("spearman"))
+Hmisc::rcorr(x=lab$bmi,y=lab$sleep_duration, type=c("pearson"))
+
+
 
 
 
@@ -116,8 +120,44 @@ t.test(lab$sleep_duration ~ lab$race, var.equal=F)
 
 #equal variances t-test
 t.test(lab$sleep_duration ~ lab$race, var.equal=T)
-
-
-
-
      
+
+
+###AGE BY RACE
+###CONTINUOUS BY CATEGORICAL
+
+#Levene's test for equality of variance
+var.test(lab$age ~ lab$race)
+
+#unequal variances t-test
+t.test(lab$age ~ lab$race, var.equal=F)
+
+#equal variances t-test
+t.test(lab$age ~ lab$race, var.equal=T)
+
+
+
+###AGE BY BMI
+###CONTINUOUS BY CONTINUOUS
+
+
+scatterplot(age ~ bmi, data = lab)
+plot(x=lab$bmi,y=lab$age)
+Hmisc::rcorr(x=lab$bmi,y=lab$age, type=c("spearman"))
+Hmisc::rcorr(x=lab$bmi,y=lab$age, type=c("pearson"))
+
+
+
+
+###RACE BY BMI
+###CONTINUOUS BY CATEGORICAL
+
+#Levene's test for equality of variance
+var.test(lab$bmi ~ lab$race)
+
+#unequal variances t-test
+t.test(lab$bmi ~ lab$race, var.equal=F)
+
+#equal variances t-test
+t.test(lab$bmi ~ lab$race, var.equal=T)
+
