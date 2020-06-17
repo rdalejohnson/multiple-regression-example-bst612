@@ -109,18 +109,101 @@ Hmisc::rcorr(x=lab$bmi,y=lab$sleep_duration, type=c("pearson"))
 
 
 
-###SLEEP DURATION BY SLEEP QUALITY
-###CONTINUOUS BY CATEGORICAL
+########################### SLEEP QUALITY BECOMES THREE DICHOTOMOUS COLUMNS (bad/not bad, good/not good, ok/not ok)
+########################### SLEEP QUALITY BECOMES THREE DICHOTOMOUS COLUMNS (bad/not bad, good/not good, ok/not ok)
+########################### SLEEP QUALITY BECOMES THREE DICHOTOMOUS COLUMNS (bad/not bad, good/not good, ok/not ok)
+########################### SLEEP QUALITY BECOMES THREE DICHOTOMOUS COLUMNS (bad/not bad, good/not good, ok/not ok)
 
+
+library (dplyr)
+
+lab <- mutate(lab, bad.sleep.quality=ifelse(as.character(sleep_quality)=="Bad", "Bad", "Not Bad") )
+lab <- mutate(lab, ok.sleep.quality=ifelse(as.character(sleep_quality)=="OK", "OK", "Not OK") )
+lab <- mutate(lab, good.sleep.quality=ifelse(as.character(sleep_quality)=="Good", "Good", "Not Good") )
+
+
+
+
+
+###SLEEP DURATION BY SLEEP QUALITY    ##### BAD SLEEP #######
+###CONTINUOUS BY CATEGORICAL
 #Levene's test for equality of variance
-var.test(lab$sleep_duration ~ lab$sleep_quality)
+var.test(lab$sleep_duration ~ lab$bad.sleep.quality)
 
 #unequal variances t-test
-t.test(lab$sleep_duration ~ lab$race, var.equal=F)
+t.test(lab$sleep_duration ~ lab$bad.sleep.quality, var.equal=F)
 
 #equal variances t-test
-t.test(lab$sleep_duration ~ lab$race, var.equal=T)
+t.test(lab$sleep_duration ~ lab$bad.sleep.quality, var.equal=T)
      
+
+###SLEEP DURATION BY SLEEP QUALITY    ##### GOOD SLEEP #######
+###CONTINUOUS BY CATEGORICAL
+#Levene's test for equality of variance
+var.test(lab$sleep_duration ~ lab$good.sleep.quality)
+
+#unequal variances t-test
+t.test(lab$sleep_duration ~ lab$good.sleep.quality, var.equal=F)
+
+#equal variances t-test
+t.test(lab$sleep_duration ~ lab$good.sleep.quality, var.equal=T)
+
+
+###SLEEP DURATION BY SLEEP QUALITY    ##### OK SLEEP #######
+###CONTINUOUS BY CATEGORICAL
+#Levene's test for equality of variance
+var.test(lab$sleep_duration ~ lab$ok.sleep.quality)
+
+#unequal variances t-test
+t.test(lab$sleep_duration ~ lab$ok.sleep.quality, var.equal=F)
+
+#equal variances t-test
+t.test(lab$sleep_duration ~ lab$ok.sleep.quality, var.equal=T)
+
+
+
+
+
+
+
+
+###AGE BY SLEEP QUALITY    ##### BAD SLEEP #######
+###CONTINUOUS BY CATEGORICAL
+#Levene's test for equality of variance
+var.test(lab$age ~ lab$bad.sleep.quality)
+
+#unequal variances t-test
+t.test(lab$age ~ lab$bad.sleep.quality, var.equal=F)
+
+#equal variances t-test
+t.test(lab$age ~ lab$bad.sleep.quality, var.equal=T)
+
+
+###AGE BY SLEEP QUALITY    ##### GOOD SLEEP #######
+###CONTINUOUS BY CATEGORICAL
+#Levene's test for equality of variance
+var.test(lab$age ~ lab$good.sleep.quality)
+
+#unequal variances t-test
+t.test(lab$age ~ lab$good.sleep.quality, var.equal=F)
+
+#equal variances t-test
+t.test(lab$age ~ lab$good.sleep.quality, var.equal=T)
+
+
+###AGE BY SLEEP QUALITY    ##### OK SLEEP #######
+###CONTINUOUS BY CATEGORICAL
+#Levene's test for equality of variance
+var.test(lab$age ~ lab$ok.sleep.quality)
+
+#unequal variances t-test
+t.test(lab$age ~ lab$ok.sleep.quality, var.equal=F)
+
+#equal variances t-test
+t.test(lab$age ~ lab$ok.sleep.quality, var.equal=T)
+
+
+
 
 
 ###AGE BY RACE
