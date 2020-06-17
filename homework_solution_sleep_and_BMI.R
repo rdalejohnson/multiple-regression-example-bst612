@@ -73,20 +73,20 @@ lab$sleep_duration[lab$sleep_duration == 30] <- NA
 #################################### STEP TWO: BIVARIATE ANALYSES *********************************************
 #################################### STEP TWO: BIVARIATE ANALYSES *********************************************
 
+library(rms)
+library(car)
 
 ###PRIMARY PREDICTOR BY ALL OTHER VARIABLES
 ###PRIMARY PREDICTOR: SLEEP DURATION
 
-###SLEEP DURATION BY AGE
-###CONTINUOUS BY CONTINUOUS
+###############################   SLEEP DURATION BY AGE
+###############################   CONTINUOUS BY CONTINUOUS
 
-library(rms)
-library(car)
-
-     
 scatterplot(sleep_duration ~ age, data = lab)
 plot(x=lab$age,y=lab$sleep_duration)
 Hmisc::rcorr(x=lab$age,y=lab$sleep_duration, type=c("spearman"))
+Hmisc::rcorr(x=lab$sleep_duration,y=lab$age, type=c("spearman"))
+
 Hmisc::rcorr(x=lab$age,y=lab$sleep_duration, type=c("pearson"))
 
 
@@ -244,3 +244,16 @@ t.test(lab$bmi ~ lab$race, var.equal=F)
 #equal variances t-test
 t.test(lab$bmi ~ lab$race, var.equal=T)
 
+
+
+###RACE BY GOOD QUALITY SLEEP
+###CATEGORICAL BY CATEGORICAL
+
+library(MASS)
+
+table2by2 = table(lab$race, lab$good.sleep.quality)
+freq.table2by2 = cbind(table2by2, margin.table(table2by2, 1))
+freq.table2by2 = rbind(freq.table2by2, c(margin.table(table2by2, 2), 1355) )
+
+chisq.test(table2by2, correct = F)
+                       
