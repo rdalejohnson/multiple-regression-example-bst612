@@ -480,10 +480,14 @@ mod=lm(time_at_activity_socialize~Students_binge_Co+age+gender+Black+Other,data=
 mod1
 
 anova(mod1)
-  Anova.mod=anova(mod1)
-  Anova.mod
-  Corrected_Total=Anova.mod[6,"d.f."] + Anova.mod[7,"d.f."]
-  Corrected_Total
+
+Anova.mod=anova(mod1)
+
+Anova.mod
+
+Corrected_Total=Anova.mod[6,"d.f."] + Anova.mod[7,"d.f."]
+
+Corrected_Total
  
   # R does not have a function that does lack of fit 
   AIC(mod1)
@@ -518,7 +522,7 @@ anova(mod1)
   plot(resid(mod))
   mod1
   confint(mod1)
-  sum( rstudent(mod) <=2 | rstudent(mod) > 2 )
+  sum( rstudent(mod) < (-2) | rstudent(mod) > 2 )
   
  ll=rstudent(mod) <= -2
  RR=rstudent(mod) >= 2  

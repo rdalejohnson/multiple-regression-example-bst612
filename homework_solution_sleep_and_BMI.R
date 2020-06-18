@@ -213,13 +213,13 @@ t.test(lab$age ~ lab$ok.sleep.quality, var.equal=T)
 ###CONTINUOUS BY CATEGORICAL
 
 #Levene's test for equality of variance
-var.test(lab$age ~ lab$race)
+var.test(lab$age ~ lab$race_ethnicity)
 
 #unequal variances t-test
-t.test(lab$age ~ lab$race, var.equal=F)
+t.test(lab$age ~ lab$race_ethnicity, var.equal=F)
 
 #equal variances t-test
-t.test(lab$age ~ lab$race, var.equal=T)
+t.test(lab$age ~ lab$race_ethnicity, var.equal=T)
 
 
 
@@ -239,13 +239,13 @@ Hmisc::rcorr(x=lab$bmi,y=lab$age, type=c("pearson"))
 ###CONTINUOUS BY CATEGORICAL
 
 #Levene's test for equality of variance
-var.test(lab$bmi ~ lab$race)
+var.test(lab$bmi ~ lab$race_ethnicity)
 
 #unequal variances t-test
-t.test(lab$bmi ~ lab$race, var.equal=F)
+t.test(lab$bmi ~ lab$race_ethnicity, var.equal=F)
 
 #equal variances t-test
-t.test(lab$bmi ~ lab$race, var.equal=T)
+t.test(lab$bmi ~ lab$race_ethnicity, var.equal=T)
 
 
 
@@ -255,10 +255,10 @@ t.test(lab$bmi ~ lab$race, var.equal=T)
 
 library(MASS)
 
-table.race.by.good.sleep = table(lab$race, lab$good.sleep.quality)
-Xsq <- chisq.test(table.race.by.sleep)
+table.race.by.good.sleep = table(lab$race_ethnicity, lab$good.sleep.quality)
+Xsq <- chisq.test(table.race.by.good.sleep)
 library(vcd)
-assocstats(table.race.by.sleep)
+assocstats(table.race.by.good.sleep)
 Xsq$expected
 
 
@@ -266,7 +266,7 @@ Xsq$expected
 ###CATEGORICAL BY CATEGORICAL
 ###CHI SQUARE
 
-table.race.by.ok.sleep = table(lab$race, lab$ok.sleep.quality)
+table.race.by.ok.sleep = table(lab$race_ethnicity, lab$ok.sleep.quality)
 Xsq <- chisq.test(table.race.by.ok.sleep)
 library(vcd)
 assocstats(table.race.by.ok.sleep)
@@ -277,7 +277,7 @@ Xsq$expected
 ###CATEGORICAL BY CATEGORICAL
 ###CHI SQUARE
 
-table.race.by.bad.sleep = table(lab$race, lab$bad.sleep.quality)
+table.race.by.bad.sleep = table(lab$race_ethnicity, lab$bad.sleep.quality)
 Xsq <- chisq.test(table.race.by.bad.sleep)
 library(vcd)
 assocstats(table.race.by.bad.sleep)
@@ -322,3 +322,93 @@ t.test(lab$bmi ~ lab$ok.sleep.quality, var.equal=F)
 
 #equal variances t-test
 t.test(lab$bmi ~ lab$ok.sleep.quality, var.equal=T)
+
+
+#####################  MLS REGRESSION ####################
+#####################  MLS REGRESSION ####################
+#####################  MLS REGRESSION ####################
+#####################  MLS REGRESSION ####################
+
+
+lab1=within(lab, {
+  raceRL= relevel(race_ethnicity,ref="White, Not Hispanic")
+  #badsleepRL=relevel(bad.sleep.quality,ref="Not Bad")
+  #oksleepRL=relevel(ok.sleep.quality,ref="Not OK")
+})
+
+
+
+mod1=ols(bmi~sleep_duration+age+raceRL+bad.sleep.quality+ok.sleep.quality,data=lab1)
+mod=lm(bmi~sleep_duration+age+raceRL+bad.sleep.quality+ok.sleep.quality,data=lab1)
+
+mod1
+
+Anova.mod=anova(mod1)
+
+Anova.mod
+
+Corrected_Total=Anova.mod[6,"d.f."] + Anova.mod[7,"d.f."]
+
+Corrected_Total
+
+
+AIC(mod1)
+BIC(mod)
+Tolerance=1/vif(mod)
+Tolerance
+
+CooksD=cooks.distance(mod)
+#CooksD[CooksD> 0.0031]
+#Count number > 0.0031
+# 61 were identified
+sum(CooksD>0.0031)
+
+#Hat values
+hatvalues(mod)
+
+plot(hatvalues(mod),type="h")
+plot(rstudent(mod),type="h")
+#Influence plot
+influencePlot(mod,main="Influence Plot",sub="Circle size is proportional to Cook's distance")
+plot(mod,which=1)
+plot(mod,which=2)
+plot(mod, which=3)
+plot(mod,which=4)
+plot(mod,which=5)
+plot(mod,which=6)
+
+
+library(MASS)
+
+#leverage(mod), will not run
+plot(resid(mod))
+mod1
+confint(mod1)
+sum( rstudent(mod) < (-2) | rstudent(mod) > 2 )
+
+ll=rstudent(mod) <= -2
+RR=rstudent(mod) >= 2  
+sum(ll | RR)
+#How do you get PRESS
+install.packages("qpcR")
+library(qpcR)
+
+PRESS(mod)
+
+plot(mod)
+h=hatvalues(mod)
+Leverage=h/(1-h)
+
+sum(Leverage> 0.0092)
+
+
+residuals(mod1)
+
+######################################
+# How do I get standardized betas's ##
+######################################
+
+install.packages("lm.beta")
+library(lm.beta)
+lm.beta(mod)
+
