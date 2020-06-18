@@ -89,7 +89,10 @@ Hmisc::rcorr(x=lab$sleep_duration,y=lab$age, type=c("spearman"))
 
 Hmisc::rcorr(x=lab$age,y=lab$sleep_duration, type=c("pearson"))
 
+#complete.obs means only complete rows, ignore NA values
+cor(lab$age, lab$sleep_duration, use = "complete.obs", method = "pearson")
 
+cor.test(lab$age, lab$sleep_duration)
 
 
 
