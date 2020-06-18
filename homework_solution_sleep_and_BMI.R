@@ -248,12 +248,74 @@ t.test(lab$bmi ~ lab$race, var.equal=T)
 
 ###RACE BY GOOD QUALITY SLEEP
 ###CATEGORICAL BY CATEGORICAL
+###CHI SQUARE
 
 library(MASS)
 
-table2by2 = table(lab$race, lab$good.sleep.quality)
-freq.table2by2 = cbind(table2by2, margin.table(table2by2, 1))
-freq.table2by2 = rbind(freq.table2by2, c(margin.table(table2by2, 2), 1355) )
+table.race.by.good.sleep = table(lab$race, lab$good.sleep.quality)
+Xsq <- chisq.test(table.race.by.sleep)
+library(vcd)
+assocstats(table.race.by.sleep)
+Xsq$expected
 
-chisq.test(table2by2, correct = F)
+
+###RACE BY OK QUALITY SLEEP
+###CATEGORICAL BY CATEGORICAL
+###CHI SQUARE
+
+table.race.by.ok.sleep = table(lab$race, lab$ok.sleep.quality)
+Xsq <- chisq.test(table.race.by.ok.sleep)
+library(vcd)
+assocstats(table.race.by.ok.sleep)
+Xsq$expected
+
+
+###RACE BY BAD QUALITY SLEEP
+###CATEGORICAL BY CATEGORICAL
+###CHI SQUARE
+
+table.race.by.bad.sleep = table(lab$race, lab$bad.sleep.quality)
+Xsq <- chisq.test(table.race.by.bad.sleep)
+library(vcd)
+assocstats(table.race.by.bad.sleep)
+Xsq$expected
                        
+
+
+
+
+
+###BMI BY SLEEP QUALITY    ##### BAD SLEEP #######
+###CONTINUOUS BY CATEGORICAL
+#Levene's test for equality of variance
+var.test(lab$bmi ~ lab$bad.sleep.quality)
+
+#unequal variances t-test
+t.test(lab$bmi ~ lab$bad.sleep.quality, var.equal=F)
+
+#equal variances t-test
+t.test(lab$bmi ~ lab$bad.sleep.quality, var.equal=T)
+
+
+###BMI BY SLEEP QUALITY    ##### GOOD SLEEP #######
+###CONTINUOUS BY CATEGORICAL
+#Levene's test for equality of variance
+var.test(lab$bmi ~ lab$good.sleep.quality)
+
+#unequal variances t-test
+t.test(lab$bmi ~ lab$good.sleep.quality, var.equal=F)
+
+#equal variances t-test
+t.test(lab$bmi ~ lab$good.sleep.quality, var.equal=T)
+
+
+###BMI BY SLEEP QUALITY    ##### OK SLEEP #######
+###CONTINUOUS BY CATEGORICAL
+#Levene's test for equality of variance
+var.test(lab$bmi ~ lab$ok.sleep.quality)
+
+#unequal variances t-test
+t.test(lab$bmi ~ lab$ok.sleep.quality, var.equal=F)
+
+#equal variances t-test
+t.test(lab$bmi ~ lab$ok.sleep.quality, var.equal=T)

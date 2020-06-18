@@ -379,7 +379,7 @@ phi(table5)
 ##### Here we see that Gender is only significant with the racial category of Black vs White/Other.  The majority of black students were female (9.5%) compared to black males (5.2%). (Previous page).
 
 ##### Comparing X with X Variables (gender and White):
-
+################### CHI SQUARE ##############################
 
 
 table6= table(lab$gender,lab$White)
