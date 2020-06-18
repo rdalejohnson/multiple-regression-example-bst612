@@ -336,6 +336,11 @@ lab1=within(lab, {
   #oksleepRL=relevel(ok.sleep.quality,ref="Not OK")
 })
 
+factor(lab1$raceRL)
+factor(lab1$bad.sleep.quality)
+factor(lab1$race_ethnicity)
+
+
 
 
 mod1=ols(bmi~sleep_duration+age+raceRL+bad.sleep.quality+ok.sleep.quality,data=lab1)
@@ -384,13 +389,13 @@ library(MASS)
 plot(resid(mod))
 mod1
 confint(mod1)
-sum( rstudent(mod) < (-2) | rstudent(mod) > 2 )
+sum( rstudent(mod) <= (-2) | rstudent(mod) >= 2 )
 
 ll=rstudent(mod) <= -2
 RR=rstudent(mod) >= 2  
 sum(ll | RR)
 #How do you get PRESS
-install.packages("qpcR")
+#install.packages("qpcR")
 library(qpcR)
 
 PRESS(mod)
@@ -408,7 +413,7 @@ residuals(mod1)
 # How do I get standardized betas's ##
 ######################################
 
-install.packages("lm.beta")
+#install.packages("lm.beta")
 library(lm.beta)
 lm.beta(mod)
 
