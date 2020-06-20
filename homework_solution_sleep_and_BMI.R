@@ -5,6 +5,7 @@
 ############################### STEP ONE: CONDUCT UNIVARIATE ANALYSES #####################################
 
 library(summarytools)
+library(ggplot2)
 
 lab=read.csv("BMI_Sleep.csv",na.strings=c("NA",""))
 
@@ -29,18 +30,31 @@ numericals.summary
 
 #Is AGE normally distributed?
 age.shapiro <- shapiro.test(lab$age)
-qqnorm(lab$age);qqline(lab$age)
+qqnorm(lab$age)
+qqline(lab$age)
 age.shapiro
+#boxplot(lab$age)
+
+ggplot(data = lab, mapping = aes(x = 'cut', y = lab$age)) +
+  geom_boxplot() +
+  geom_jitter( position=position_jitter(0.08))
+
 
 #Is Sleep Duration normally distributed?
 sleep_duration.shapiro <- shapiro.test(lab$sleep_duration)
 qqnorm(lab$sleep_duration);qqline(lab$sleep_duration)
 sleep_duration.shapiro
+ggplot(data = lab, mapping = aes(x = 'cut', y = lab$sleep_duration)) +
+  geom_boxplot() +
+  geom_jitter( position=position_jitter(0.08))
 
 #Is BMI normally distributed?
 bmi.shapiro <- shapiro.test(lab$bmi)
 qqnorm(lab$bmi);qqline(lab$bmi)
 bmi.shapiro
+ggplot(data = lab, mapping = aes(x = 'cut', y = lab$bmi)) +
+  geom_boxplot() +
+  geom_jitter( position=position_jitter(0.08))
 
 
 ######################################################################
@@ -65,6 +79,13 @@ summary(lab)
 #summary(lab)
 
 lab$sleep_duration[lab$sleep_duration == 30] <- NA
+
+sleep_duration.shapiro <- shapiro.test(lab$sleep_duration)
+qqnorm(lab$sleep_duration);qqline(lab$sleep_duration)
+sleep_duration.shapiro
+ggplot(data = lab, mapping = aes(x = 'cut', y = lab$sleep_duration)) +
+  geom_boxplot() +
+  geom_jitter( position=position_jitter(0.08))
 
 
 #################################### STEP TWO: BIVARIATE ANALYSES *********************************************
