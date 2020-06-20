@@ -6,6 +6,8 @@
 
 library(summarytools)
 library(ggplot2)
+library(ggpubr)
+
 
 lab=read.csv("BMI_Sleep.csv",na.strings=c("NA",""))
 
@@ -33,7 +35,7 @@ age.shapiro <- shapiro.test(lab$age)
 qqnorm(lab$age)
 qqline(lab$age)
 age.shapiro
-#boxplot(lab$age)
+ggqqplot(lab$age, ylab = "Age")
 
 ggplot(data = lab, mapping = aes(x = 'cut', y = lab$age)) +
   geom_boxplot() +
@@ -44,9 +46,9 @@ ggplot(data = lab, mapping = aes(x = 'cut', y = lab$age)) +
 sleep_duration.shapiro <- shapiro.test(lab$sleep_duration)
 qqnorm(lab$sleep_duration);qqline(lab$sleep_duration)
 sleep_duration.shapiro
-ggplot(data = lab, mapping = aes(x = 'cut', y = lab$sleep_duration)) +
-  geom_boxplot() +
-  geom_jitter( position=position_jitter(0.08))
+ggplot(data = lab,  mapping = aes(x = 'cut', y = lab$sleep_duration)) +
+  geom_boxplot() + coord_flip() 
+  #geom_jitter( position=position_jitter(0.3))
 
 #Is BMI normally distributed?
 bmi.shapiro <- shapiro.test(lab$bmi)
@@ -115,10 +117,11 @@ cor(lab$age, lab$sleep_duration, use = "complete.obs", method = "pearson")
 
 cor.test(lab$age, lab$sleep_duration)
 
-
-
-
-
+ggs = ggscatter(lab, x = "age", y = "sleep_duration", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "Age", ylab = "Sleep Duration") 
+ggs
 
 ###SLEEP DURATION BY BMI
 ###CONTINUOUS BY CONTINUOUS
@@ -129,7 +132,16 @@ plot(x=lab$bmi,y=lab$sleep_duration)
 Hmisc::rcorr(x=lab$bmi,y=lab$sleep_duration, type=c("spearman"))
 Hmisc::rcorr(x=lab$bmi,y=lab$sleep_duration, type=c("pearson"))
 
+#complete.obs means only complete rows, ignore NA values
+cor(lab$bmi, lab$sleep_duration, use = "complete.obs", method = "pearson")
 
+cor.test(lab$bmi, lab$sleep_duration)
+
+ggs2 = ggscatter(lab, x = "bmi", y = "sleep_duration", 
+                add = "reg.line", conf.int = TRUE, 
+                cor.coef = TRUE, cor.method = "pearson",
+                xlab = "BMI", ylab = "Sleep Duration") 
+ggs2
 
 
 
