@@ -202,7 +202,8 @@ phi(table1)
 
 ##### Gender is statistically significant (Pearson Chi-Square or Likelihood Ratio = p<0.0001).  
 ##### For Table 1, we want to use the % within gender recoded because we need to standardize the numbers across our dependent variable.  In this case, we are interested in the differences between Binging and Not Binging.
-##### Gender:  Males report more binge drinking than females (48.3% compared to 36.3%). The phi indicates that this is a weak relationship (-0.121). 
+##### Gender:  Males report more binge drinking than females (48.3% compared to 36.3%). 
+##### The phi indicates that this is a weak relationship (-0.121). 
 
 
 
@@ -260,7 +261,9 @@ chisq.test(table4,correct=F)
 # phi coefficient
 phi(table4)
 
-##### When we look at Others compared to Black/White Races, 27.1%  of Other races report binge drinking. This is a slightly weaker relationship with a phi of 0..113.
+##### When we look at Others compared to Black/White Races, 
+####  27.1%  of Other races report binge drinking. 
+####  This is a slightly weaker relationship with a phi of 0..113.
 
 
 Age=lab$age

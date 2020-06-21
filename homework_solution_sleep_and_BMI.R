@@ -73,7 +73,11 @@ summary(lab)
 
 
 
-##### REMOVE ROWS WITH INVALID DATA
+#################################### REMOVE ROWS WITH INVALID DATA ############################################
+#################################### REMOVE ROWS WITH INVALID DATA ############################################
+#################################### REMOVE ROWS WITH INVALID DATA ############################################
+#################################### REMOVE ROWS WITH INVALID DATA ############################################
+#################################### REMOVE ROWS WITH INVALID DATA ############################################
 
 
 #lab <- lab[-which(is.na(lab$sleep_quality) | is.na(lab$sleep_duration) |  lab$sleep_duration >= 30 ), ]
@@ -88,6 +92,42 @@ sleep_duration.shapiro
 ggplot(data = lab, mapping = aes(x = 'cut', y = lab$sleep_duration)) +
   geom_boxplot() +
   geom_jitter( position=position_jitter(0.08))
+
+
+######################### SIDE EXPERIMENT WITH categorical and continuous ###############################
+#Sources:  fastDummies: https://www.marsja.se/create-dummy-variables-in-r/
+#categorial-continuous investigation/correlation: https://stats.stackexchange.com/questions/119835/correlation-between-a-nominal-iv-and-a-continuous-dv-variable/124618#124618
+
+library(fastDummies)
+
+labDummiedUp <- dummy_cols(lab, select_columns = c('race_ethnicity', 'sleep_quality'))
+
+boxplot(bmi ~ race_ethnicity, data = labDummiedUp, ylab = "Race and BMI")
+
+boxplot(age ~ race_ethnicity, data = labDummiedUp, ylab = "Age and Race")
+
+boxplot(age ~ sleep_quality, data = labDummiedUp, ylab = "Age and Sleep Quality")
+
+boxplot(bmi ~ sleep_quality, data = labDummiedUp, ylab = "Sleep Quality and BMI")
+
+bmi.sleep.model = lm(formula = bmi ~ sleep_quality, data = labDummiedUp)
+summary(bmi.sleep.model)
+
+print(bmi.sleep.model$fitted)
+
+bmi.race.model = lm(formula = bmi ~ race_ethnicity, data = lab)
+summary(bmi.race.model)
+
+bmi.age.model = lm(formula = bmi ~ age, data = lab)
+summary(bmi.age.model)
+
+bmi.sleep.duration.model = lm(formula = bmi ~ sleep_duration, data = lab)
+summary(bmi.sleep.duration.model)
+
+bmi.sleep.duration.model2 = lm(formula = sleep_duration ~ bmi , data = lab)
+summary(bmi.sleep.duration.model2)
+
+########################################################################################################
 
 
 #################################### STEP TWO: BIVARIATE ANALYSES *********************************************
@@ -380,10 +420,42 @@ factor(lab1$bad.sleep.quality)
 factor(lab1$race_ethnicity)
 
 
-
+freq(lab1)
 
 mod1=ols(bmi~sleep_duration+age+raceRL+bad.sleep.quality+ok.sleep.quality,data=lab1)
 mod=lm(bmi~sleep_duration+age+raceRL+bad.sleep.quality+ok.sleep.quality,data=lab1)
+
+summary(mod)
+
+##https://web.stanford.edu/class/stats191/notebooks/Diagnostics_for_multiple_regression.html
+
+par(mfrow=c(2,2))
+plot(mod, pch=23 ,bg='orange',cex=2)
+plot(resid(mod), rstudent(mod), pch=23, bg='blue', cex=3)
+plot(rstandard(mod), rstudent(mod), pch=23, bg='purple', cex=3)
+qqnorm(rstandard(mod), pch=23, bg='red', cex=2)
+
+plot(dffits(mod), pch=23, bg='orange', cex=2, ylab="DFFITS")
+
+lab1[which(dffits(mod) > 0.2),]
+
+plot(cooks.distance(mod), pch=23, bg='orange', cex=2, ylab="Cook's distance")
+plot(hatvalues(mod), pch=23, bg='orange', cex=1, ylab='Hat values')
+lab1[which(hatvalues(mod) > 0.3),]
+
+plot(hatvalues(mod), rstandard(mod), pch=23, bg='red', cex=2)
+
+plot(dfbetas(mod)[,'sleep_duration'], pch=23, bg='orange', cex=2, ylab="DFBETA (sleep_duration)")
+lab1[which(abs(dfbetas(mod)[,'sleep_duration']) > 1),]
+
+
+
+plot(mod)
+
+mod.predicted <- predict(mod)   # Save the predicted values
+mod.residuals <- residuals(mod) # Save the residual values
+
+
 
 mod1
 
@@ -398,6 +470,7 @@ Corrected_Total
 
 AIC(mod1)
 BIC(mod)
+vif(mod)
 Tolerance=1/vif(mod)
 Tolerance
 
@@ -455,4 +528,42 @@ residuals(mod1)
 #install.packages("lm.beta")
 library(lm.beta)
 lm.beta(mod)
+
+
+
+
+# Fit the model
+
+lab3 <- lab[-which(is.na(lab$sleep_quality) | is.na(lab$sleep_duration) |  lab$sleep_duration >= 30 ), ]
+
+#which(! complete.cases(x))
+
+
+## https://www.r-bloggers.com/visualising-residuals/
+
+
+fit <- lm(bmi~sleep_duration+age+race_ethnicity+bad.sleep.quality+ok.sleep.quality,data=lab3)
+
+fit
+
+# Obtain predicted and residual values
+lab3$predicted = predict(fit)
+lab3$residuals <- residuals(fit)
+
+library(tidyr)
+
+# Create plot
+lab3 %>% 
+  gather(key = "iv", value = "x", -bmi, -predicted, -residuals) %>%
+  ggplot(aes(x = x, y = bmi)) +
+  geom_segment(aes(xend = x, yend = predicted), alpha = .2) +
+  geom_point(aes(color = residuals)) +
+  scale_color_gradient2(low = "blue", mid = "white", high = "red") +
+  guides(color = FALSE) +
+  geom_point(aes(y = predicted), shape = 1) +
+  facet_grid(~ iv, scales = "free") +
+  theme_bw()
+
+
+ggqqplot(lab3$residuals, ylab = "Residuals")
 
