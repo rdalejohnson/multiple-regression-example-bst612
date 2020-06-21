@@ -311,6 +311,8 @@ Students_binge_in_College=lab$Students_binge_in_College
 
 #Levenes test for equality of variance
 var.test(time_at_activity_socialize~Students_binge_in_College)
+var.test(lab$time_at_activity_socialize~lab$Students_binge_in_College)
+
 
 #Unequal variance t test
 t.test(time_at_activity_socialize~Students_binge_in_College, var.equal=F)
@@ -455,7 +457,7 @@ with(lab, rcorr(x=age,y=time_at_activity_socialize))
 
 library(rms)
 
-install.packages("car")
+#install.packages("car")
 library(car)
 
 #################################################################
@@ -538,6 +540,8 @@ Corrected_Total
  Leverage=h/(1-h)
  
  sum(Leverage> 0.0092)
+ 
+ plot(hatvalues(mod), type = "h")
  
  
  residuals(mod1)

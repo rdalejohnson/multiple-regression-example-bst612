@@ -123,6 +123,22 @@ ggs = ggscatter(lab, x = "age", y = "sleep_duration",
           xlab = "Age", ylab = "Sleep Duration") 
 ggs
 
+
+###AGE BY BMI
+###CONTINUOUS BY CONTINUOUS
+
+
+scatterplot(age ~ bmi, data = lab)
+plot(x=lab$bmi,y=lab$age)
+Hmisc::rcorr(x=lab$bmi,y=lab$age, type=c("spearman"))
+Hmisc::rcorr(x=lab$bmi,y=lab$age, type=c("pearson"))
+
+cor(lab$age, lab$bmi, use = "complete.obs", method = "pearson")
+
+cor.test(lab$age, lab$bmi)
+
+
+
 ###SLEEP DURATION BY BMI
 ###CONTINUOUS BY CONTINUOUS
 
@@ -254,16 +270,6 @@ t.test(lab$age ~ lab$race_ethnicity, var.equal=F)
 #equal variances t-test
 t.test(lab$age ~ lab$race_ethnicity, var.equal=T)
 
-
-
-###AGE BY BMI
-###CONTINUOUS BY CONTINUOUS
-
-
-scatterplot(age ~ bmi, data = lab)
-plot(x=lab$bmi,y=lab$age)
-Hmisc::rcorr(x=lab$bmi,y=lab$age, type=c("spearman"))
-Hmisc::rcorr(x=lab$bmi,y=lab$age, type=c("pearson"))
 
 
 
@@ -418,7 +424,7 @@ plot(mod,which=6)
 
 library(MASS)
 
-#leverage(mod), will not run
+#leverages(mod) # will not run
 plot(resid(mod))
 mod1
 confint(mod1)
