@@ -58,6 +58,13 @@ ggplot(data = lab, mapping = aes(x = 'cut', y = lab$bmi)) +
   geom_boxplot() +
   geom_jitter( position=position_jitter(0.08))
 
+#https://stackoverflow.com/questions/27839432/how-to-generate-bin-frequency-table-in-r
+br = seq(0,1,by=0.1)
+
+ranges = paste(head(br,-1), br[-1], sep=" - ")
+freq   = hist(lab, breaks=br, include.lowest=TRUE, plot=FALSE)
+
+data.frame(range = ranges, frequency = freq$counts)
 
 ######################################################################
 # Categorical Variables will get counts from summary  
@@ -422,14 +429,15 @@ factor(lab1$race_ethnicity)
 
 freq(lab1)
 
-mod1=ols(bmi~sleep_duration+age+raceRL+bad.sleep.quality+ok.sleep.quality,data=lab1)
+#mod1=ols(bmi~sleep_duration+age+raceRL+bad.sleep.quality+ok.sleep.quality,data=lab1)
 mod=lm(bmi~sleep_duration+age+raceRL+bad.sleep.quality+ok.sleep.quality,data=lab1)
 
 summary(mod)
+#summary(mod1)
 
 ##https://web.stanford.edu/class/stats191/notebooks/Diagnostics_for_multiple_regression.html
 
-par(mfrow=c(2,2))
+#par(mfrow=c(2,2))
 plot(mod, pch=23 ,bg='orange',cex=2)
 plot(resid(mod), rstudent(mod), pch=23, bg='blue', cex=3)
 plot(rstandard(mod), rstudent(mod), pch=23, bg='purple', cex=3)
@@ -446,10 +454,10 @@ lab1[which(hatvalues(mod) > 0.3),]
 plot(hatvalues(mod), rstandard(mod), pch=23, bg='red', cex=2)
 
 plot(dfbetas(mod)[,'sleep_duration'], pch=23, bg='orange', cex=2, ylab="DFBETA (sleep_duration)")
-lab1[which(abs(dfbetas(mod)[,'sleep_duration']) > 1),]
+dfbetas.sleep.duration <- lab1[which(abs(dfbetas(mod)[,'sleep_duration']) > 1),]
 
 
-
+#plot(trunc(lab1$bmi))
 plot(mod)
 
 mod.predicted <- predict(mod)   # Save the predicted values
@@ -457,18 +465,21 @@ mod.residuals <- residuals(mod) # Save the residual values
 
 
 
-mod1
+#mod1
 
-Anova.mod=anova(mod1)
+#Anova.mod=anova(mod1)
 
-Anova.mod
+Anova.mod <- anova(mod)
 
 Corrected_Total=Anova.mod[6,"d.f."] + Anova.mod[7,"d.f."]
 
 Corrected_Total
 
+library(broom)
+glance(mod) %>%
+  dplyr::select(adj.r.squared, sigma, AIC, BIC, p.value)
 
-AIC(mod1)
+AIC(mod)
 BIC(mod)
 vif(mod)
 Tolerance=1/vif(mod)
@@ -499,8 +510,8 @@ library(MASS)
 
 #leverages(mod) # will not run
 plot(resid(mod))
-mod1
-confint(mod1)
+#mod1
+confint(mod)
 sum( rstudent(mod) <= (-2) | rstudent(mod) >= 2 )
 
 ll=rstudent(mod) <= -2
@@ -510,7 +521,9 @@ sum(ll | RR)
 #install.packages("qpcR")
 library(qpcR)
 
-PRESS(mod)
+#res0 <- PRESS(mod)
+res1 <- PRESS(mod)
+barplot(res1$residuals)
 
 plot(mod)
 h=hatvalues(mod)
@@ -519,7 +532,7 @@ Leverage=h/(1-h)
 sum(Leverage> 0.0092)
 
 
-residuals(mod1)
+residuals(mod)
 
 ######################################
 # How do I get standardized betas's ##
