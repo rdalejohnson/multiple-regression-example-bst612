@@ -422,9 +422,9 @@ lab1=within(lab, {
   #oksleepRL=relevel(ok.sleep.quality,ref="Not OK")
 })
 
-factor(lab1$raceRL)
-factor(lab1$bad.sleep.quality)
-factor(lab1$race_ethnicity)
+#factor(lab1$raceRL)
+#factor(lab1$bad.sleep.quality)
+#factor(lab1$race_ethnicity)
 
 
 ##freq(lab1)
@@ -530,6 +530,16 @@ glance(mod) %>%
 glance(mod.lms) %>%
   dplyr::select(adj.r.squared, sigma, AIC, BIC, p.value)
 
+
+######################################
+# How do I get standardized betas's ##
+######################################
+
+#install.packages("lm.beta")
+library(lm.beta)
+lm.beta(mod)
+lm.beta(mod.lms)
+
 AIC(mod)
 BIC(mod)
 vif(mod)
@@ -585,13 +595,7 @@ sum(Leverage> 0.0092)
 
 residuals(mod)
 
-######################################
-# How do I get standardized betas's ##
-######################################
 
-#install.packages("lm.beta")
-library(lm.beta)
-lm.beta(mod)
 
 
 
