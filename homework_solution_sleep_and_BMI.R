@@ -427,25 +427,62 @@ factor(lab1$bad.sleep.quality)
 factor(lab1$race_ethnicity)
 
 
-freq(lab1)
+##freq(lab1)
 
 #mod1=ols(bmi~sleep_duration+age+raceRL+bad.sleep.quality+ok.sleep.quality,data=lab1)
-mod=lm(bmi~sleep_duration+age+raceRL+bad.sleep.quality+ok.sleep.quality,data=lab1)
+mod=ols   (bmi~sleep_duration+age+raceRL+bad.sleep.quality+ok.sleep.quality,data=lab1)
+
+mod.lms=lm(bmi~sleep_duration+age+raceRL+bad.sleep.quality+ok.sleep.quality,data=lab1)
+
+
+mod
+mod.lms
+summary(mod.lms)
+
+confint(mod)
+
+
+Anova.mod <- anova(mod)
+
+Anova.mod
+
+Anova.modlms <- anova(mod.lms)
+
+Anova.modlms
+
+Corrected_Total=Anova.mod[6,"d.f."] + Anova.mod[7,"d.f."]
+
+Corrected_Total
+
+library(broom)
+glance(mod) %>%
+  dplyr::select(adj.r.squared, sigma, AIC, BIC, p.value)
+
+glance(mod) %>%
+  dplyr::select(adj.r.squared, sigma, AIC, BIC, p.value)
+
+
+
+
+
+
+
 
 summary(mod)
-#summary(mod1)
+summary(mod.lms)
 
 ##https://web.stanford.edu/class/stats191/notebooks/Diagnostics_for_multiple_regression.html
 
 #par(mfrow=c(2,2))
 plot(mod, pch=23 ,bg='orange',cex=2)
+
 plot(resid(mod), rstudent(mod), pch=23, bg='blue', cex=3)
 plot(rstandard(mod), rstudent(mod), pch=23, bg='purple', cex=3)
 qqnorm(rstandard(mod), pch=23, bg='red', cex=2)
 
 plot(dffits(mod), pch=23, bg='orange', cex=2, ylab="DFFITS")
 
-lab1[which(dffits(mod) > 0.2),]
+lab1[which(dffits(mod) > 1),]
 
 plot(cooks.distance(mod), pch=23, bg='orange', cex=2, ylab="Cook's distance")
 plot(hatvalues(mod), pch=23, bg='orange', cex=1, ylab='Hat values')
@@ -455,7 +492,11 @@ plot(hatvalues(mod), rstandard(mod), pch=23, bg='red', cex=2)
 
 plot(dfbetas(mod)[,'sleep_duration'], pch=23, bg='orange', cex=2, ylab="DFBETA (sleep_duration)")
 dfbetas.sleep.duration <- lab1[which(abs(dfbetas(mod)[,'sleep_duration']) > 1),]
+dfbetas.sleep.duration 
 
+plot(dfbetas(mod)[,'age'], pch=23, bg='orange', cex=2, ylab="DFBETA (age)")
+dfbetas.age <- lab1[which(abs(dfbetas(mod)[,'age']) > 1),]
+dfbetas.age
 
 #plot(trunc(lab1$bmi))
 plot(mod)
@@ -466,10 +507,17 @@ mod.residuals <- residuals(mod) # Save the residual values
 
 
 #mod1
+mod
 
 #Anova.mod=anova(mod1)
 
 Anova.mod <- anova(mod)
+
+Anova.mod
+
+Anova.modlms <- anova(mod.lms)
+
+Anova.modlms
 
 Corrected_Total=Anova.mod[6,"d.f."] + Anova.mod[7,"d.f."]
 
@@ -477,6 +525,9 @@ Corrected_Total
 
 library(broom)
 glance(mod) %>%
+  dplyr::select(adj.r.squared, sigma, AIC, BIC, p.value)
+
+glance(mod.lms) %>%
   dplyr::select(adj.r.squared, sigma, AIC, BIC, p.value)
 
 AIC(mod)
