@@ -432,6 +432,7 @@ lab1=within(lab, {
 #mod1=ols(bmi~sleep_duration+age+raceRL+bad.sleep.quality+ok.sleep.quality,data=lab1)
 mod=ols   (bmi~sleep_duration+age+raceRL+bad.sleep.quality+ok.sleep.quality,data=lab1)
 
+
 mod.lms=lm(bmi~sleep_duration+age+raceRL+bad.sleep.quality+ok.sleep.quality,data=lab1)
 
 
@@ -458,7 +459,7 @@ library(broom)
 glance(mod) %>%
   dplyr::select(adj.r.squared, sigma, AIC, BIC, p.value)
 
-glance(mod) %>%
+glance(mod.lms) %>%
   dplyr::select(adj.r.squared, sigma, AIC, BIC, p.value)
 
 
@@ -474,35 +475,35 @@ summary(mod.lms)
 ##https://web.stanford.edu/class/stats191/notebooks/Diagnostics_for_multiple_regression.html
 
 #par(mfrow=c(2,2))
-plot(mod, pch=23 ,bg='orange',cex=2)
+plot(mod.lms, pch=23 ,bg='orange',cex=2)
 
-plot(resid(mod), rstudent(mod), pch=23, bg='blue', cex=3)
-plot(rstandard(mod), rstudent(mod), pch=23, bg='purple', cex=3)
-qqnorm(rstandard(mod), pch=23, bg='red', cex=2)
+plot(resid(mod.lms), rstudent(mod.lms), pch=23, bg='blue', cex=3)
+plot(rstandard(mod.lms), rstudent(mod.lms), pch=23, bg='purple', cex=3)
+qqnorm(rstandard(mod.lms), pch=23, bg='red', cex=2)
 
-plot(dffits(mod), pch=23, bg='orange', cex=2, ylab="DFFITS")
+plot(dffits(mod.lms), pch=23, bg='orange', cex=2, ylab="DFFITS")
 
-lab1[which(dffits(mod) > 1),]
+lab1[which(dffits(mod.lms) > 1),]
 
-plot(cooks.distance(mod), pch=23, bg='orange', cex=2, ylab="Cook's distance")
-plot(hatvalues(mod), pch=23, bg='orange', cex=1, ylab='Hat values')
-lab1[which(hatvalues(mod) > 0.3),]
+plot(cooks.distance(mod.lms), pch=23, bg='orange', cex=2, ylab="Cook's distance")
+plot(hatvalues(mod.lms), pch=23, bg='orange', cex=1, ylab='Hat values')
+lab1[which(hatvalues(mod.lms) > 0.3),]
 
-plot(hatvalues(mod), rstandard(mod), pch=23, bg='red', cex=2)
+plot(hatvalues(mod.lms), rstandard(mod.lms), pch=23, bg='red', cex=2)
 
-plot(dfbetas(mod)[,'sleep_duration'], pch=23, bg='orange', cex=2, ylab="DFBETA (sleep_duration)")
-dfbetas.sleep.duration <- lab1[which(abs(dfbetas(mod)[,'sleep_duration']) > 1),]
+plot(dfbetas(mod.lms)[,'sleep_duration'], pch=23, bg='orange', cex=2, ylab="DFBETA (sleep_duration)")
+dfbetas.sleep.duration <- lab1[which(abs(dfbetas(mod.lms)[,'sleep_duration']) > 1),]
 dfbetas.sleep.duration 
 
-plot(dfbetas(mod)[,'age'], pch=23, bg='orange', cex=2, ylab="DFBETA (age)")
-dfbetas.age <- lab1[which(abs(dfbetas(mod)[,'age']) > 1),]
+plot(dfbetas(mod.lms)[,'age'], pch=23, bg='orange', cex=2, ylab="DFBETA (age)")
+dfbetas.age <- lab1[which(abs(dfbetas(mod.lms)[,'age']) > 1),]
 dfbetas.age
 
 #plot(trunc(lab1$bmi))
-plot(mod)
+plot(mod.lms)
 
-mod.predicted <- predict(mod)   # Save the predicted values
-mod.residuals <- residuals(mod) # Save the residual values
+mod.predicted <- predict(mod.lms)   # Save the predicted values
+mod.residuals <- residuals(mod.lms) # Save the residual values
 
 
 
@@ -546,25 +547,26 @@ vif(mod)
 Tolerance=1/vif(mod)
 Tolerance
 
-CooksD=cooks.distance(mod)
+library(stats)
+CooksD=cooks.distance(mod.lms)
 #CooksD[CooksD> 0.0031]
 #Count number > 0.0031
 # 61 were identified
 sum(CooksD>0.0031)
 
 #Hat values
-hatvalues(mod)
+hatvalues(mod.lms)
 
-plot(hatvalues(mod),type="h")
-plot(rstudent(mod),type="h")
+plot(hatvalues(mod.lms),type="h")
+plot(rstudent(mod.lms),type="h")
 #Influence plot
-influencePlot(mod,main="Influence Plot",sub="Circle size is proportional to Cook's distance")
-plot(mod,which=1)
-plot(mod,which=2)
-plot(mod, which=3)
-plot(mod,which=4)
-plot(mod,which=5)
-plot(mod,which=6)
+influencePlot(mod.lms,main="Influence Plot",sub="Circle size is proportional to Cook's distance")
+plot(mod.lms,which=1)
+plot(mod.lms,which=2)
+plot(mod.lms, which=3)
+plot(mod.lms,which=4)
+plot(mod.lms,which=5)
+plot(mod.lms,which=6)
 
 
 library(MASS)
@@ -573,10 +575,10 @@ library(MASS)
 plot(resid(mod))
 #mod1
 confint(mod)
-sum( rstudent(mod) <= (-2) | rstudent(mod) >= 2 )
+sum( rstudent(mod.lms) <= (-2) | rstudent(mod.lms) >= 2 )
 
-ll=rstudent(mod) <= -2
-RR=rstudent(mod) >= 2  
+ll=rstudent(mod.lms) <= -2
+RR=rstudent(mod.lms) >= 2  
 sum(ll | RR)
 #How do you get PRESS
 #install.packages("qpcR")
